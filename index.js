@@ -17,7 +17,7 @@ const spinner2 = ora({
 
 const provinces = require('./provinces')['86'];
 const pcodes = [];
-const target = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/#{route}.html';
+const target = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2018/#{route}.html';
 
 let cities = [];
 
