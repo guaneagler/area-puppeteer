@@ -21,9 +21,9 @@ const target = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2018/#{route}.h
 
 let cities = [];
 
-if (fs.existsSync(path.resolve(__dirname, 'cities.js'))) {
-    cities = require('./cities.js');
-}
+//if (fs.existsSync(path.resolve(__dirname, 'cities.js'))) {
+//    cities = require('./cities.js');
+//}
 
 let areas = [];
 let url = '';
@@ -103,7 +103,7 @@ process.on('unhandledRejection', (err) => {
     if (!cities.length) {
         for(let i = 0, l = pcodes.length; i < l; i++) {
             const pcode = pcodes[i];
-            await timeout(1500);
+            await timeout(1000);
             const [err] = await awaitTo(getCitiesByPCode(page, pcode));
             if (err) {
                 // 这个重试主要是处理因避免耗时(Navigation Timeout Exceeded)导致的错误
@@ -123,12 +123,12 @@ process.on('unhandledRejection', (err) => {
 
     for(let i = 0, l = cities.length; i < l; i++) {
         const city = cities[i];
-        await timeout(3000);
-        const [err] = await awaitTo(getAreasByCCode(page, city));
-        if (err) {
+        await timeout(1000);
+        let [err] = await awaitTo(getAreasByCCode(page, city));
+        while (err) {
             // 这个重试主要是处理因避免耗时(Navigation Timeout Exceeded)导致的错误
             console.log('\n', chalk.red(`抓取数据失败，失败链接: ${url}，错误信息: ${err.message}，正在重试....\n`));
-            await getAreasByCCode(page, city);
+            [err] = await awaitTo(getAreasByCCode(page, city));
         }
     }
 
